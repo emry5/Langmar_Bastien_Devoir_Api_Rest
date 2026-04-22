@@ -1,0 +1,17 @@
+const express = require('express');
+const router = express.Router();
+
+const service = require('../services/catways');
+const private = require('../middlewares/private');
+
+const reservationRoute = require('./reservations');
+
+router.get('/', private.checkJWT, service.getAll);
+router.get('/:id', private.checkJWT, service.getById);
+router.post('/', private.checkJWT, service.add);
+router.patch('/:id', private.checkJWT, service.update);
+router.delete('/:id', private.checkJWT, service.delete);
+
+router.use('/:id/reservations', reservationRoute);
+
+module.exports = router;
