@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <header>
+        <%- include('../partials/header-menu') %>
+    </header>
+    <main>
+        
+        <h2> Gestion des Catways</h2>
+
+        <!--LISTE GLOBALE DES CATWAYS-->
+        <div>
+            <strong>Liste des catways: </strong>
+            <button onclick="toggleCatways()">
+                Afficher / Cacher les catways
+            </button>
+
+            <div id="catways-list" style="display:none; margin-top:20px;">
+
+            <% catways.forEach(catway => { %>
+
+                <div style="border:1px solid black; padding:10px; margin-bottom:10px;">
+
+                    <p>
+                        <strong>Numéro :</strong>
+                        <%= catway.catwayNumber %>
+                    </p>
+
+                    <p>
+                        <strong>Type :</strong>
+                        <%= catway.catwayType %>
+                    </p>
+                    <p>
+                        <strong>État :</strong>
+                        <%= catway.catwayState %>
+                    </p>
+                    <a href="/catways/<%= catway.catwayNumber %>">
+                    </a>
+                </div>
+            <% }) %>
+            </div>
+            <script>
+                function toggleCatways() {
+                const list = document.getElementById('catways-list');
+
+                if (list.style.display === 'none') {
+                    list.style.display = 'block';
+                } else {
+                    list.style.display = 'none';
+                }
+            }
+            </script>
+
+        </div>
+
+        <!--RECHERCHE DE CATWAY-->
+        <div>
+            <form method="get" action="/catways">
+                <fieldset>
+                    <legend>Récupérer un catway</legend>
+                         <ul>
+                            <li> 
+                                <label for="catwayNumber">
+                                        Entrez le numéro du catway
+                                    </label>
+                                <input
+                                    type="number"
+                                    name="catwayNumber"
+                                    required
+                                />
+                            </li>
+                        </ul>  
+                        <button type="submit">
+                            Rechercher
+                        </button>
+                </fieldset>
+            </form>    
+        
+            <% if (catway) { %>
+
+                <h2>Résultat de recherche</h2>
+
+                <div>
+                    <p>Numéro : <%= catway.catwayNumber %></p>
+                    <p>Type : <%= catway.catwayType %></p>
+                    <p>Etat : <%= catway.catwayState %></p>
+                </div>
+
+            <% } else { %>
+
+                <h2>Rechercher un catway</h2>
+
+            <% } %>
+        </div>
+
+        <!--AJOUTER UN CATWAY-->
+        <div>
+            <form method="post" action="/catways">
+                <fieldset>
+                    <legend>Ajouter un catway:</legend>
+                    <ul>
+                        <li>
+                            <label for="catwayNumber">Entrez votre numero de catway</label>
+                            <input type="number" name="catwayNumber"/>
+                        </li>
+                        <li>
+                            <label for="catwayType">Entrez le type du catway</label>
+                            <input type="text" name="catwayType"/>
+                        </li>
+                        <li>
+                            <label for="catwayState">Entrez l'état du catway</label>
+                            <input type="text" name="catwayState"/>
+                        </li>
+                        <button type="submit">Ajouter un catway</button>
+                    </ul>
+
+                </fieldset>
+            </form>
+        </div>
+
+        <!--MODIFIER, METTRE A JOUR UN CATWAY-->
+        <div>
+            <form method="post" action="/catways/update">
+                <fieldset>
+                    <legend>Modifier un catway</legend>
+                    <ul>
+                        <li>
+                            <label for="catwayNumber">
+                                Numéro du catway à modifier
+                            </label>
+                            <input 
+                                type="number"
+                                name="catwayNumber"
+                                required/>
+                        </li>
+                        <li>
+                            <label for="catwayType">
+                                Nouveau type du catway
+                            </label>
+                            <input 
+                                type="text"
+                                name="catwayType"/>
+                        </li>
+                        <li>
+                            <label for="catwayState">
+                                Nouvel état du catway
+                            </label>
+                            <input 
+                                type="text"
+                                name="catwayState"/>
+                        </li>
+                    </ul>
+                    <button type="submit">Modifier</button>
+                </fieldset>
+            </form>
+        </div>
+
+        <!--SUPPRIMER UN CATWAY-->
+        <div>
+            <form method="post" action="/catways/delete">
+                <fieldset>
+                    <legend>Supprmimer un catway</legend>
+                         <ul>
+                            <li> 
+                                <label for="catwayNumber">
+                                        Entrez le numéro du catway
+                                    </label>
+                                <input
+                                    type="number"
+                                    name="catwayNumber"
+                                    required
+                                />
+                            </li>
+                        </ul>  
+                        <button type="submit">
+                            Supprimer
+                        </button>
+                </fieldset>
+            </form>    
+        </div>
+
+    </main>
+</html>
+
+
+

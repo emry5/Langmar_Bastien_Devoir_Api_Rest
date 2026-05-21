@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <header>
+    <%- include('../partials/header-menu') %>
+  </header>
+  <h2>Dashboard</h2>
+    <div>
+      <p>Bienvenue <strong><%= user.name %> <%= user.firstname %></strong></p>
+      <p>Email : <%= user.email %></p>
+      <p>Date : <%= date.toLocaleDateString() %></p>
+    </div>
+</html>

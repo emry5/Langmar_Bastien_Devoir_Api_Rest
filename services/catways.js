@@ -14,7 +14,7 @@ exports.getById = async (req, res) => {
 exports.add = async (req, res) => {
     try {
         const catway = await Catway.create(req.body);
-        res.status(201).json(catway);
+        res.status(201).redirect('/catways');
     } catch (err) {
         res.status(500).json(err);
     }

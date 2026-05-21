@@ -19,6 +19,13 @@ exports.authenticate = async (req,res, next) => {
 
                 if (response) {
                     delete user._doc.password;
+                    
+                    req.session.user = {
+                        id: user._id,
+                        name: user.name,
+                        firstname: user.firstname,
+                        email: user.email
+                    };
 
                     const expireIn = 24 * 60 * 60;
                     const token = jwt.sign(
@@ -28,7 +35,13 @@ exports.authenticate = async (req,res, next) => {
                     );
 
                     res.header('Authorization', 'Bearer ' + token);
-                    return res.status(200).json('authenticate_succeed');
+                    if (req.headers['content-type'] === 'application/json') {
+                        return res.status(200).json ({
+                            message: 'authenticate_succeed',
+                            token: token
+                        });
+                    }
+                    return res.redirect('/dashboard');
                 }
 
                 return res.status(403).json('wrong_credentials');
@@ -43,11 +56,20 @@ exports.authenticate = async (req,res, next) => {
     }
 };
 
-exports.getById = async (req, res, next) => {
-    const id = req.params.id
+exports.getAll = async (req, res) => {
+    try {
+        const users = await User.find();
+        return res.status(200).json(users);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+};
+
+exports.getByEmail = async (req, res, next) => {
+    const id = req.params.email;
 
     try{
-        let user = await User.findById(id);
+        let user = await User.findOne({ email: email });
 
         if(user) {
             return res.status(200).json(user);
@@ -60,67 +82,85 @@ exports.getById = async (req, res, next) => {
 };
 
 exports.add = async (req, res) => {
-    try {
-        const temp = ({
-            name     : req.body.name,
-            firstname: req.body.firstname,
-            email    : req.body.email,
-            password : req.body.password
-        
-        });
-        
-    
-        let user = await User.create(temp);
 
-        return res.status(201).json(user); 
+    try {
+
+        const temp = {
+            name: req.body.name,
+            firstname: req.body.firstname,
+            email: req.body.email,
+            password: req.body.password
+        };
+
+        await User.create(temp);
+
+        return res.status(201).redirect('/users');
 
     } catch (error) {
+
         console.log("ERROR ADD USER :", error);
 
         if (error.code === 11000) {
             return res.status(409).json('email_already_exists');
         }
+
         return res.status(501).json(error);
+
     }
 };
 
 exports.update = async(req, res, next) => {
-    const id = req.params.id
+
     const temp = ({
         name     : req.body.name,
         firstname: req.body.firstname,
-        email    : req.body.email,
         password : req.body.password
     });
 
     try {
-        let user = await User.findOne({_id : id});
+
+        let user = await User.findOne({
+            email: req.body.email
+        });
 
         if (user) {
+
             Object.keys(temp).forEach((key) => {
+
                 if (!!temp[key]) {
                     user[key] = temp[key];
                 }
+
             });
 
             await user.save();
-            return res.status(201).json(user);
+
+            return res.redirect('/users');
+
         }
 
         return res.status(404).json('user_not_found');
+
     } catch (error) {
+
         return res.status(501).json(error);
-    }  
+
+    }
+
 };
 
 exports.delete = async(req, res, next) => {
-    const id = req.params.id
+    const email = req.params.email;
     
     try {
-        await User.deleteOne({_id : id});
+        const result = await User.deleteOne({ email: email });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json('user_not_found');
+        }
 
         return res.status(204).json('delete_ok');
     } catch (error) {
         return res.status(501).json(error);
     }
-}
+};
