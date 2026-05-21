@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <header>
+        <%- include('../partials/header-menu') %>
+    </header>
+    <main>
+        
+            <h2>Gestion des utilisateurs</h2>
+
+            <!--LISTE GLOBALE DES UTILISATEURS-->
+        <div>
+            <strong>Liste des utilisateurs : </strong>
+
+            <button onclick="toggleUsers()">
+                Afficher / Cacher les utilisateurs
+            </button>
+            <div id="users-list" style="display:none; margin-top:20px;">
+                <% users.forEach(user => { %>
+                    <div style="border:1px solid black; padding:10px; margin-bottom:10px;">
+                        <p>
+                            <strong>Nom :</strong>
+                            <%= user.name %>
+                        </p>
+                        <p>
+                            <strong>Prénom :</strong>
+                            <%= user.firstname %>
+                        </p>
+                        <p>
+                            <strong>Email :</strong>
+                            <%= user.email %>
+                        </p>
+                    </div>
+                <% }) %>
+            </div>
+            <script>
+
+            function toggleUsers() {
+
+                const list =
+                    document.getElementById('users-list');
+
+                if (list.style.display === 'none') {
+                    list.style.display = 'block';
+                } else {
+                    list.style.display = 'none';
+                }
+            }
+            </script>
+        </div>
+
+        <!--RECHERCHER UN UTILISATEUR-->
+        <div>
+            <form method="get" action="/users">
+                <fieldset>
+                    <legend>Récupérer un utilisateur</legend>
+                         <ul>
+                            <li> 
+                                <label for="email">
+                                        Entrez l'email
+                                    </label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    required
+                                />
+                            </li>
+                        </ul>  
+                        <button type="submit">
+                            Rechercher
+                        </button>
+                </fieldset>
+            </form> 
+            <% if (searchedUser) { %>
+                <div
+                    style="
+                        border:1px solid black;
+                        padding:10px;
+                        margin-top:20px;
+                    "
+                >
+                    <p>
+                        <strong>Nom :</strong>
+                        <%= searchedUser.name %>
+                    </p>
+                    <p>
+                        <strong>Prénom :</strong>
+                        <%= searchedUser.firstname %>
+                    </p>
+                    <p>
+                        <strong>Email :</strong>
+                        <%= searchedUser.email %>
+                    </p>
+                </div>
+            <% } %>
+        </div>
+
+        <!--AJOUTER UN UTILISATEUR-->
+        <div>
+            <form method="post" action="/users">
+                <fieldset>
+                    <legend>Ajouter un utilisateur</legend>
+                    <ul>
+                        <li>
+                            <label for="name">Entrez le nom</label>
+                            <input type="text" name="name">
+                        </li>
+                        <li>
+                            <label for="firstname">Entrez le prénom</label>
+                            <input type="text" name="firstname">
+                        </li>
+                        <li>
+                            <label for="email">Entrez l'email</label>
+                            <input type="email" name="email">
+                        </li>
+                        <li>
+                            <label for="password">Entrez le mot de passe</label>
+                            <input type="password" name="password">
+                        </li>
+                    </ul>
+                    <button type="submit">Ajouter</button>
+                </fieldset>
+            </form>
+        </div>
+
+        <!--MODIFIER, METTRE A JOUR UN UTILISATEUR-->
+        <div>
+            <form method="post" action="/users/update">
+                <fieldset>
+                    <legend>Modifier un utilisateur:</legend>
+                    <ul>
+                        <li>
+                            <label for="email">Entrez l'email à modifier</label>
+                            <input type="email" name="email" required>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>
+                            <label for="name">Entrez le nom à modifier</label>
+                            <input type="text" name="name">
+                        </li>
+                        <li>
+                            <label for="firstname">Entrez le prénom à modifier</label>
+                            <input type="text" name="firstname">
+                        </li>
+                        <li>
+                            <label for="password">Entrez le mot de passe à modifier</label>
+                            <input type="password" name="password">
+                        </li>
+                    </ul>
+                    <button type="submit">Modifier</button>
+                </fieldset>
+            </form>
+        </div>
+
+        <!--SUPPRIMER UN UTILISATEUR-->
+        <div>
+            <form method="post" action="/users/delete">
+                <fieldset>
+                    <legend>Supprimer un utilisateur</legend>
+                    <ul>
+                        <li>
+                            <label for="email">entrez l'email de l'utilisateur à supprimer</label>
+                            <input type="email" name="email">
+                        </li>
+                    </ul>
+                    <button type="submit">supprimer</button>
+                </fieldset>
+            </form>
+        </div>
+    </main>
+</html>

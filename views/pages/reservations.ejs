@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<header>
+    <%- include('../partials/header-menu') %>
+</header>
+<body>
+    <main>
+
+        <h2>Gestion des réservations</h2>
+
+        <!-- LISTE GLOBALE DES RESERVATIONS-->
+        <div>
+            <strong>Liste des réservations :</strong>
+            <button onclick="toggleReservations()">
+                Afficher / Cacher les réservations
+            </button>
+            <div id="reservations-list" style="display:none; margin-top:20px;">
+                <% if (reservations && reservations.length > 0) { %>
+                    <% reservations.forEach(reservation => { %>
+                        <div style="border:1px solid black; padding:10px; margin-bottom:10px;">
+                            <p><strong>Catway :</strong> <%= reservation.catwayNumber %></p>
+                            <p><strong>Client :</strong> <%= reservation.clientName %></p>
+                            <p><strong>Bateau :</strong> <%= reservation.boatName %></p>
+                            <p><strong>Entrée :</strong> <%= reservation.startDate %></p>
+                            <p><strong>Sortie :</strong> <%= reservation.endDate %></p>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p>Aucune réservation</p>
+                <% } %>
+            </div>
+        
+            <script>
+                function toggleReservations() {
+                    const list = document.getElementById('reservations-list');
+
+                    list.style.display = (list.style.display === 'none') ? 'block' : 'none';
+                }
+            </script>
+        </div>
+
+        <!-- RECHERCHER UNE RESERVATION-->
+        <div>
+            <form method="get" action="/reservations">
+                <fieldset>
+                    <legend>Récupérer une réservation</legend>
+                    <ul>
+                        <li>
+                            <label>Numéro de Catway</label>
+                            <input type="number" name="catwayNumber">
+                        </li>
+                    </ul>
+                    <button type="submit">Rechercher</button>
+                </fieldset>
+            </form>
+
+            <% if (searchedReservation) { %>
+            <h2>Résultat de recherche</h2>
+            <div style="border:1px solid black; padding:10px; margin-top:20px;">
+                <p>
+                    <strong>Catway :</strong>
+                    <%= searchedReservation.catwayNumber %>
+                </p>
+                <p>
+                    <strong>Nom client :</strong>
+                    <%= searchedReservation.clientName %>
+                </p>
+                <p>
+                    <strong>Nom du bateau :</strong>
+                    <%= searchedReservation.boatName %>
+                </p>
+                <p>
+                    <strong>Date d'entrée :</strong>
+                    <%= searchedReservation.startDate %>
+                </p>
+                <p>
+                    <strong>Date de sortie :</strong>
+                    <%= searchedReservation.endDate %>
+                </p>
+            </div>
+            <% } %>
+        </div>
+
+        <!--AJOUTER UNE RESERVATION-->
+        <div>
+            <form method="post" action="/reservations">
+                <fieldset>
+                    <legend>Ajouter une reservation</legend>
+                    <ul>
+                        <li>
+                            <label for="catwayNumber">Numéro de catway</label>
+                            <input type="number" name="catwayNumber">
+                        </li>
+                        <li>
+                            <label for="clientName">Nom du client</label>
+                            <input type="text" name="clientName">
+                        </li>
+                        <li>
+                            <label for="boatName">Nom du bateau</label>
+                            <input type="text" name="boatName">
+                        </li>
+                        <li>
+                            <label for="startDate">Date d'entrée</label>
+                            <input type="date" name="startDate">
+                        </li>
+                        <li>
+                            <label for="endDate">Date de sortie</label>
+                            <input type="date" name="endDate">
+                        </li>
+                    </ul>
+                    <button type="submit">Ajouter</button>
+                </fieldset>
+            </form>
+        </div>
+
+        <!--MODIFIER UNE RESERVATION-->
+        <div>
+            <form method="post" action="/reservations/update">
+                <fieldset>
+                    <legend>Modifier une reservation</legend>
+                    <ul>
+                        <li>
+                            <label for="catwayNumber">Numéro de catway à modifier</label>
+                            <input type="number" name="catwayNumber" id="catwayNumber">
+                        </li>
+                        <li>
+                            <label for="clientName">Nom du client à modier</label>
+                            <input type="text" name="clientName">
+                        </li>
+                        <li>
+                            <label for="boatName">Nom du bateau à modifier</label>
+                            <input type="text" name="boatName">
+                        </li>
+                        <li>
+                            <label for="startDate">Date d'entrée à modier</label>
+                            <input type="date" name="startDate">
+                        </li>
+                        <li>
+                            <label for="endDate">Date de sortie à modifier</label>
+                            <input type="date" name="endDate">
+                        </li>
+                    </ul>
+                    <button type="submit">modifier</button>
+                </fieldset>
+            </form>
+        </div>
+
+        <!--SUPPRIMER UNE RESERVATION-->
+        <div>
+            <form method="post" action="/reservations/delete">
+                <fieldset>
+                    <legend>Supprimer une reservation</legend>
+                    <ul>
+                        <li>
+                            <label for="catwayNumber">Numéro de catway</label>
+                            <input type="number" name="catwayNumber">
+                        </li>
+                    </ul>
+                    <button type="submit">Supprimer</button>
+                </fieldset>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
